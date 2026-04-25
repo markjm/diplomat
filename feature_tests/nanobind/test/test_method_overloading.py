@@ -24,3 +24,20 @@ def test_named_constructor_overloading():
     assert d1 is not d2, "Different calls should create different objects"
     assert d2 is not d3, "Different calls should create different objects"
     assert d1 is not d3, "Different calls should create different objects"
+
+
+def test_const_method_overloading():
+    """Test that const &self method overloading generates nb::const_ in overload_cast.
+
+    Without nb::const_, nanobind cannot resolve overloaded const member functions,
+    causing a compile error like 'no match for call to overload_cast_impl'.
+    """
+    obj = somelib.mylib.ConstMethodOverloading.new("hello world")
+
+    # Test string overload
+    assert obj.contains("hello") == True
+    assert obj.contains("xyz") == False
+
+    # Test char (code point) overload
+    assert obj.contains(ord('h')) == True
+    assert obj.contains(ord('z')) == False

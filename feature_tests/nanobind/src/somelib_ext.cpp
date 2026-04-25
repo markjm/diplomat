@@ -64,6 +64,7 @@ void add_MyEnum_binding(nb::module_);
 void add_free_function_binding(nb::module_);
 }namespace somelib::mylib{
   
+void add_ConstMethodOverloading_binding(nb::module_);
 void add_MethodOverloading_binding(nb::module_);
 }namespace somelib::nested::ns{
   
@@ -219,6 +220,7 @@ NB_MODULE(somelib, mod)
     add_MyEnum_binding(mod);
     add_free_function_binding(mod);
     
+    mylib::add_ConstMethodOverloading_binding(mylib_mod);
     mylib::add_MethodOverloading_binding(mylib_mod);
     
     nested::ns::add_Nested_binding(nested_ns_mod);

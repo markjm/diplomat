@@ -47,6 +47,8 @@ pub(super) struct MethodInfo<'a> {
     // Everything else is handled by the automatic behavior depending on return type.
     pub(super) lifetime_args: Option<Cow<'a, str>>,
     pub(super) overloads: Vec<OverloadInfo<'a>>,
+    /// Whether the method has a const self parameter (needed for nb::const_ in overload_cast)
+    pub(super) is_const: bool,
 }
 
 /// A type name with a corresponding variable name, such as a struct field or a function parameter.
@@ -650,6 +652,11 @@ impl<'ccx, 'tcx: 'ccx> ItemGenContext<'ccx, 'tcx> {
             lifetime_args.push(str.to_owned());
         }
 
+        let is_const = method
+            .param_self
+            .as_ref()
+            .is_some_and(|ps| ps.ty.is_immutably_borrowed());
+
         Some(MethodInfo {
             method,
             method_name,
@@ -664,6 +671,7 @@ impl<'ccx, 'tcx: 'ccx> ItemGenContext<'ccx, 'tcx> {
                 Some(lifetime_args.join(", ").into())
             },
             overloads: vec![],
+            is_const,
         })
     }
 }

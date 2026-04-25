@@ -12,7 +12,8 @@ nb::overload_cast<{% for p in overload_params -%} {{- p.type_name -}} {%- if !lo
     -%}>(
 {%- endif -%}
 &{{- method_name_cpp_inner(method_name) -}}
-{%- if m.overloads.len() > 0 -%} ) {%- endif -%}
+{%- if m.overloads.len() > 0 -%}
+{%- if m.is_const -%}, nb::const_{%- endif -%}){%- endif -%}
 {%- endmacro -%}
 {%- macro method_name_cpp(pre_call="std::move(maybe_op_unwrap(", post_call="))") -%}
     {%- decl success_owned_op -%}
